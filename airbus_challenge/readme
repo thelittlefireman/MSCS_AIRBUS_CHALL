@@ -1,0 +1,22 @@
+(c) Airbus Embedded Security Challenge
+
+-- Scenario --
+
+You are a foreign country spy trying to attack BigCorp Labs physical
+security. As of today, your infiltrated agents can't access restricted
+area offices. Their user certificate is unprivileged, they need a
+"group=admin" certificate !
+
+One of your agents has found a engineer usb stick with interesting
+documents on it. He sent you an email.
+
+Your goal is to try to hack into the authentication server responsible
+for delivering certificates.
+
+-- Real life --
+
+You will be given the certificate server binary file 'challenge'. You
+can run the server in a standalone terminal. Consider this terminal as
+a physical machine with a console text screen printing logs. You are
+attacking in blackbox. Do not try to reverse engineer the 'challenge'
+binary. You will waste your time ...
