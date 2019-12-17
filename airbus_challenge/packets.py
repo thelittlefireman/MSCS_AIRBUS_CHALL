@@ -136,6 +136,16 @@ def change_disk(disk):
     pkt = send_pkt(sd)
     print("byte: %d'0x%02x' -> len(%d) data: %r" % (0,0, len(pkt), pkt))
 
+def show_files_w_disk(path):
+    sd = chr(0x2a) + "ls "+path
+    pkt = send_pkt(sd)
+    print("byte: %d'0x%02x' -> len(%d) data: %r" % (0,0, len(pkt), pkt))
+
+def show_help():
+    sd = chr(0x2a) + "help"
+    pkt = send_pkt(sd)
+    print("byte: %d'0x%02x' -> len(%d) data: %r" % (0,0, len(pkt), pkt))
+
 def show_files(disk,path):
     change_disk(disk)
     sd = chr(0x2a) + "ls "+path
@@ -147,6 +157,14 @@ def print_file(disk,path):
     sd = path
     pkt = send_pkt(sd)
     print("byte: %d'0x%02x' -> len(%d) data: %r" % (0,0, len(pkt), pkt))
+
+def dl_file_w_disk(path, name):
+    sd = path
+    pkt = send_pkt(sd)
+    print("byte: %d'0x%02x' -> len(%d) data: %r" % (0,0, len(pkt), pkt))
+    with open(name,'w') as f:
+        f.write(pkt[6:])
+    f.close()
 
 def dl_file(disk,path, name):
     change_disk(disk)
@@ -240,16 +258,31 @@ def tmp():
 ## STAMP KEY
 
 def stamp_cmd(group,epoch):
-    stamp_header_off_i= chr(0X00) * 3 + chr(0x35)
+    stamp_header_off_i= chr(0X00) * 3 + chr(0x0C)
     stamp_header_off_k= chr(0X00) * 1 + chr(0x00) + chr(0x00) + chr(0x0C) # offk+8 > 1 00 00
-    stamp_header_off_o = chr(0X00) * 3 + chr(0x76)
-    offset_group = 33 *chr(0x00)
-    offset_epoch = (33 - len(group)) *chr(0x00)
+    stamp_header_off_o = chr(0X00) * 1 +chr(0x00) + chr(0x00) + chr(0x4D)
     stamp_key = "D37AE50F"
-    stamp = stamp_header_off_i + stamp_header_off_k + stamp_header_off_o + stamp_key +offset_group + group + offset_epoch +epoch + (52 - len(group) - len(epoch)) * chr(0x00)
+    stamp = stamp_header_off_i + stamp_header_off_k + stamp_header_off_o + stamp_key + group + epoch+(108 - len(group) - len(epoch)) * chr(0x00)
     exec_cmd(0xac,stamp)
-    print_file(0x02, chr(0x2a) + "logdl "+"../FW"+ "./"*48+"../LOG/STAMP/LAST.TXT")
+    #print_file(0x02, chr(0x2a) + "logdl "+"../FW"+ "./"*48+"../LOG/STAMP/LAST.TXT")
 
-stamp_cmd("group=user","epoch=dd")
+def stamp_cmd_key(group,epoch):
+    stamp_header_off_i= chr(0X00) * 3 + chr(0x0C)
+    stamp_header_off_k= chr(0X00) * 1 + chr(0x00) + chr(0x00) + chr(0x0C) # offk+8 > 1 00 00
+    stamp_header_off_o = chr(0X6F) * 1 +chr(0xDD) + chr(0xE0) + chr(0x88)
+    stamp_key = "D37AE50F"
+    stamp = stamp_header_off_i + stamp_header_off_k + stamp_header_off_o + stamp_key + group + epoch+(108 - len(group) - len(epoch)) * chr(0x00)
+    exec_cmd(0xac,stamp)
+    #print_file(0x02, chr(0x2a) + "logdl "+"../FW"+ "./"*48+"../LOG/STAMP/LAST.TXT")
+
+
+#stamp_cmd("group=user","epoch=22")
+#stamp_cmd("epoch=22group=user\0","")
+
+
+stamp_cmd_key("epoch=22group=user\0","")
+#show_files_w_disk("/LOG")
+#sd = chr(0x2a) + "logdl "+"../FW/"+ "./"*50+"../FW/KERNEL.ELF"
+#dl_file_w_disk(sd,"KERNEL.ELF")
 #stamp_cmd("group=user\0\n")
 

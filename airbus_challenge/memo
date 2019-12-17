@@ -14,3 +14,6 @@ sd = chr(0x2a) + "ls LOG"
 # 101732.LOG
 
 byte: 0'0x00' -> len(147) data: '\x01*\x00\x00\x06\x93part-1: id=0, base=0001b000 size=00200000\npart-2: id=1, base=0021d000 size=00200000\npart-3: id=2, base=0041f000 size=00200000\nPOK kernel init'
+
+
+AES KEY : 3c878f85fe3a9f30
