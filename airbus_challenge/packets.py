@@ -266,7 +266,7 @@ def stamp_cmd(group,epoch):
     exec_cmd(0xac,stamp)
     #print_file(0x02, chr(0x2a) + "logdl "+"../FW"+ "./"*48+"../LOG/STAMP/LAST.TXT")
 
-def stamp_cmd_key(group,epoch):
+def stamp_cmd_find_key(key_finder,group):
     stamp_header_off_i= chr(0X00) * 3 + chr(0x0C)
     stamp_header_off_k= chr(0X00) * 1 + chr(0x00) + chr(0x00) + chr(0x0C) # offk+8 > 1 00 00
     stamp_header_off_o = chr(0X6F) * 1 +chr(0xDD) + chr(0xE0) + chr(0x88)
